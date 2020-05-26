@@ -1,0 +1,41 @@
+# fopen_utf8
+
+Like `fopen()` except it always works with UTF-8 paths.
+ 
+Why?
+~~~~
+
+People keep writing libraries that don't open UTF-8 paths correctly on Windows. Sometimes the non-ASCII characters aren't converted at all, sometimes long paths aren't handled properly, sometimes it doesn't work right depending on defines or the compiler, or sometimes they make it more complicated and fiddly than it needs to be. To them I say just put this file into your project and call `fopen_utf8()` as you would call `fopen()` rather than your failure of a fopen wrapper.
+
+My code doesn't rely on Microsoft's garbage API for converting strings. In fact the only Microsoft function it calls is `_wfopen()` to consistently open files using a UTF-16 string made from the caller-provided UTF-8 string. Everything else is done using lovely portable code that I've used for years.
+
+How to use
+~~~~~~~~~~
+
+If you are making a single file library then you should simply copy everything in the implementation part and put that around the top of your library (or at least right above your `fopen_utf8()` calls), just make sure you also have `#include <stdint.h>` in there somewhere. Otherwise just use it as a header and to use the implementation do `#define FOPEN_UTF8_IMPLEMENTATION` before including the file in your C code.
+
+Here's one way you can use it which works both in C and C++ with no warnings:
+[source,c]
+-----------
+#define FOPEN_UTF8_IMPLEMENTATION
+#include "fopen_utf8.h"
+
+int main()
+{
+	FILE *file = fopen_utf8("\321\202\320\265\321\201\321\202.txt", "wb");
+	fprintf(file, "It works!\n");
+	fclose(file);
+
+	return 0;
+}
+-----------
+
+Licence
+~~~~~~~
+
+Public domain, no attribution, just put it in your code, who cares where it came from.
+
+More
+~~~~
+
+If you'd like more such UTF format conversion have a look at https://github.com/Photosounder/rouziclib/blob/master/rouziclib/text/unicode.c[rouziclib/text/unicode.c^] which contains the code I use for parsing through UTF-8 and UTF-16 strings, printing characters using 32-bit codepoint values, converting between formats which is essential when deadling with many Windows API functions like `GetOpenFileNameW`/`GetSaveFileNameW`. Honestly just stop using Windows APIs to handle such things, they're garbage, my code is more elegant, flexible, and fairly well tested.
