@@ -23,6 +23,9 @@ extern FILE *fopen_utf8(const char *path, const char *mode);
 #endif
 
 #ifdef FOPEN_UTF8_IMPLEMENTATION
+//----Cut starting here to copy-paste directly into your library----
+#ifndef C_FOPEN_UTF8
+#define C_FOPEN_UTF8
 int utf8_char_size(const uint8_t *c)
 {
 	const uint8_t	m0x	= 0x80, c0x	= 0x00,
@@ -194,4 +197,6 @@ FILE *fopen_utf8(const char *path, const char *mode)
 	return fopen(path, mode);
 	#endif
 }
+#endif
+//----Cut ending here to copy-paste directly into your library----
 #endif

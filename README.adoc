@@ -12,7 +12,7 @@ My code doesn't rely on Microsoft's garbage API for converting strings. In fact 
 How to use
 ~~~~~~~~~~
 
-If you are making a single file library then you should simply copy everything in the implementation part and put that around the top of your library (or at least right above your `fopen_utf8()` calls), just make sure you also have `#include <stdint.h>` in there somewhere. Otherwise just use it as a header and to use the implementation do `#define FOPEN_UTF8_IMPLEMENTATION` before including the file in your C code.
+If you are making a single file library then you should simply copy everything in the implementation part and put that around the top of your library (or at least right above your `fopen_utf8()` calls), just make sure you also have `#include <stdint.h>` in there somewhere and that you keep the `#ifndef C_FOPEN_UTF8` clause to avoid duplicates (like if I include your library into https://github.com/Photosounder/rouziclib/[mine^] where all these functions are already present). Otherwise just use it as a header and to use the implementation do `#define FOPEN_UTF8_IMPLEMENTATION` before including the file in your C code.
 
 Here's one way you can use it which works both in C and C++ with no warnings:
 [source,c]
